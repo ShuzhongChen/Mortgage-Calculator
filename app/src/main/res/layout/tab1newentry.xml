@@ -1,11 +1,6 @@
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintLayout"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.shuzhongchen.mortgagecalculator.MainActivity$PlaceholderFragment">
-
+    android:layout_height="wrap_content" >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,12 +16,12 @@
             android:text="Property Info" />
 
         <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/user_name_layout"
-        android:layout_toLeftOf="@+id/user_picture"
-        tools:text="Property Type" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/user_name_layout"
+            android:layout_toLeftOf="@+id/user_picture"
+            android:text="Property Type" />
 
         <EditText
             android:id="@+id/property_type"
@@ -35,12 +30,12 @@
             android:inputType="none"/>
 
         <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/user_name_layout"
-        android:layout_toLeftOf="@+id/user_picture"
-        tools:text="Street Address" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/user_name_layout"
+            android:layout_toLeftOf="@+id/user_picture"
+            android:text="Street Address" />
 
         <EditText
             android:id="@+id/street_address"
@@ -49,12 +44,12 @@
             android:inputType="none"/>
 
         <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/user_name_layout"
-        android:layout_toLeftOf="@+id/user_picture"
-        tools:text="City" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/user_name_layout"
+            android:layout_toLeftOf="@+id/user_picture"
+            android:text="City" />
 
         <EditText
             android:id="@+id/city"
@@ -68,7 +63,7 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/user_name_layout"
             android:layout_toLeftOf="@+id/user_picture"
-            tools:text="State" />
+            android:text="State" />
 
         <EditText
             android:id="@+id/state"
@@ -82,7 +77,7 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/user_name_layout"
             android:layout_toLeftOf="@+id/user_picture"
-            tools:text="Zipcode" />
+            android:text="Zipcode" />
 
         <EditText
             android:id="@+id/zipcode"
@@ -91,7 +86,77 @@
             android:inputType="none"/>
 
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/caption_text_size"
+            android:textAllCaps="true"
+            android:text="Loan Info" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/user_name_layout"
+            android:layout_toLeftOf="@+id/user_picture"
+            android:text="Property Price" />
+
+        <EditText
+            android:id="@+id/property_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/user_name_layout"
+            android:layout_toLeftOf="@+id/user_picture"
+            android:text="Down Payment" />
+
+        <EditText
+            android:id="@+id/down_payment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/user_name_layout"
+            android:layout_toLeftOf="@+id/user_picture"
+            android:text="Annual Percentage Rate (APR)" />
+
+        <EditText
+            android:id="@+id/annual_percentage_rate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/user_name_layout"
+            android:layout_toLeftOf="@+id/user_picture"
+            android:text="Terms" />
+
+        <EditText
+            android:id="@+id/terms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"/>
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:text="Save" />
 
     </LinearLayout>
+</ScrollView>
 
-</android.support.constraint.ConstraintLayout>
