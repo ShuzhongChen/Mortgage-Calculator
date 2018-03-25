@@ -18,6 +18,10 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.shuzhongchen.mortgagecalculator.model.BasicInfo;
+
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     /**
