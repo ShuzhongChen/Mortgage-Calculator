@@ -17,6 +17,9 @@ public class Tab1NewEntry extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.tab1newentry, container, false);
+
+
+
         return rootView;
     }
 }
