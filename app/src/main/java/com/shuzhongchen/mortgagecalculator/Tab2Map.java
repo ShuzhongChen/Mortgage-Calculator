@@ -1,15 +1,19 @@
 package com.shuzhongchen.mortgagecalculator;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -17,10 +21,26 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.reflect.TypeToken;
+import com.shuzhongchen.mortgagecalculator.model.BasicInfo;
+import com.shuzhongchen.mortgagecalculator.util.ModelUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by syrhuang on 3/24/18.
@@ -37,6 +57,7 @@ public class Tab2Map extends Fragment {
 
     MapView mMapView;
     private GoogleMap googleMap;
+    private static final String MODEL_BASICINFO = "model_basicinfo";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -72,13 +93,71 @@ public class Tab2Map extends Fragment {
                     }
                 }
 
-                // For dropping a marker at a point on the Map
-                LatLng sydney = new LatLng(-34, 151);
-                googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+                List<BasicInfo> savedBasicInfo = ModelUtils.read(getContext(), MODEL_BASICINFO,
+                        new TypeToken<List<BasicInfo>>(){});
+                if (savedBasicInfo == null) {
+                    Toast.makeText(context, "No saved property!", Toast.LENGTH_LONG).show();
+                } else {
+                    for (int i = 0; i < savedBasicInfo.size(); i++) {
+                        final BasicInfo geoInfo = savedBasicInfo.get(i);
+
+                        // For dropping a marker at a point on the Map
+                        LatLng pos = new LatLng(geoInfo.lat, geoInfo.lng);
+                        final Marker thisMarker = googleMap.addMarker(new MarkerOptions().position(pos).title(geoInfo.propertyType).snippet(geoInfo.propertyPrice));
+
+                        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                            @Override
+                            public boolean onMarkerClick(Marker marker) {
+
+                                // Auto-generated method stub
+                                if (marker.equals(thisMarker)) {
+                                    Log.d("Click", "test");
+
+                                    Dialog dialogDetails = new Dialog(MainActivity.this);
+                                    dialogDetails.setTitle("Show Me");
+                                    dialogDetails.setContentView(R.layout.dialog_details);
+
+                                    TextView propertyType = dialogDetails.findViewById(R.id.property_type);
+                                    propertyType.setText(geoInfo.propertyType);
+                                    TextView address = dialogDetails.findViewById(R.id.street_address);
+                                    address.setText(geoInfo.streetAddress);
+                                    TextView city = dialogDetails.findViewById(R.id.city);
+                                    city.setText(geoInfo.city);
+                                    TextView loan = dialogDetails.findViewById(R.id.loan_amount);
+                                    loan.setText(Integer.parseInt(geoInfo.propertyPrice) - Integer.parseInt(geoInfo.downPayment));
+                                    TextView apr = dialogDetails.findViewById(R.id.apr);
+                                    apr.setText(geoInfo.apr);
+                                    TextView monthly = dialogDetails.findViewById(R.id.monthly_payment);
+                                    monthly.setText(geoInfo.monthlyPayment);
+
+                                    Button edit = dialogDetails.findViewById(R.id.btn_edit);
+                                    edit.setOnClickListener(new View.OnClickListener() {
+                                        public void onClick(View v) {
+
+                                        }
+                                    });
+                                    Button delete = dialogDetails.findViewById(R.id.btn_delete);
+                                    delete.setOnClickListener(new View.OnClickListener() {
+                                        public void onClick(View v) {
+
+                                        }
+                                    });
+
+                                    dialogDetails.show();
+
+                                    return true;
+                                }
+                                return false;
+
+                            }
+                        });
+                    }
+                }
 
                 // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                /*CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));*/
+
             }
         });
 

@@ -31,6 +31,10 @@ public class BasicInfo implements Parcelable{
 
     public String terms;
 
+    public double lat;
+
+    public double lng;
+
     public BasicInfo() {
         id = UUID.randomUUID().toString();
     }
@@ -47,6 +51,8 @@ public class BasicInfo implements Parcelable{
         downPayment = in.readString();
         apr = in.readString();
         terms = in.readString();
+        lat = in.readDouble();
+        lng = in.readDouble();
     }
 
     public static final Creator<BasicInfo> CREATOR = new Creator<BasicInfo>() {
@@ -78,5 +84,7 @@ public class BasicInfo implements Parcelable{
         parcel.writeString(downPayment);
         parcel.writeString(apr);
         parcel.writeString(terms);
+        parcel.writeDouble(lat);
+        parcel.writeDouble(lng);
     }
 }
