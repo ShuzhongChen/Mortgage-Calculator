@@ -37,7 +37,7 @@ public class Tab1NewEntry extends Fragment{
                 new TypeToken<List<BasicInfo>>(){});
         basicInfos = savedBasicInfo == null ? new ArrayList<BasicInfo>() : savedBasicInfo;
 
-        save = getView().findViewById(R.id.save);
+        save = rootView.findViewById(R.id.save);
         save.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 BasicInfo[] infoArray = new BasicInfo[1];
