@@ -23,15 +23,15 @@ public class BasicInfo implements Parcelable{
 
     public String zipcode;
 
-    public float propertyPrice;
+    public double propertyPrice;
 
-    public float downPayment;
+    public double downPayment;
 
-    public float apr;
+    public double apr;
 
     public int terms;
 
-    public float monthyPayment;
+    public double monthyPayment;
 
     public double lat;
 
@@ -49,11 +49,11 @@ public class BasicInfo implements Parcelable{
         city = in.readString();
         state = in.readString();
         zipcode = in.readString();
-        propertyPrice = in.readFloat();
-        downPayment = in.readFloat();
-        apr = in.readFloat();
+        propertyPrice = in.readDouble();
+        downPayment = in.readDouble();
+        apr = in.readDouble();
         terms = in.readInt();
-        monthyPayment = in.readFloat();
+        monthyPayment = in.readDouble();
         lat = in.readDouble();
         lng = in.readDouble();
     }
@@ -83,11 +83,11 @@ public class BasicInfo implements Parcelable{
         parcel.writeString(city);
         parcel.writeString(state);
         parcel.writeString(zipcode);
-        parcel.writeFloat(propertyPrice);
-        parcel.writeFloat(downPayment);
-        parcel.writeFloat(apr);
+        parcel.writeDouble(propertyPrice);
+        parcel.writeDouble(downPayment);
+        parcel.writeDouble(apr);
         parcel.writeInt(terms);
-        parcel.writeFloat(monthyPayment);
+        parcel.writeDouble(monthyPayment);
         parcel.writeDouble(lat);
         parcel.writeDouble(lng);
     }
