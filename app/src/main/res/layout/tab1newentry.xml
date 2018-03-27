@@ -20,8 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/user_name_layout"
-            android:layout_toLeftOf="@+id/user_picture"
             android:text="Property Type" />
 
         <EditText
@@ -34,8 +32,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/user_name_layout"
-            android:layout_toLeftOf="@+id/user_picture"
             android:text="Street Address" />
 
         <EditText
@@ -48,8 +44,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/user_name_layout"
-            android:layout_toLeftOf="@+id/user_picture"
             android:text="City" />
 
         <EditText
@@ -62,22 +56,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/user_name_layout"
-            android:layout_toLeftOf="@+id/user_picture"
             android:text="State" />
 
-        <EditText
+        <Spinner
             android:id="@+id/state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none"/>
+            android:entries="@array/states"
+            android:prompt="@string/state_prompt" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/user_name_layout"
-            android:layout_toLeftOf="@+id/user_picture"
             android:text="Zipcode" />
 
         <EditText
@@ -99,8 +90,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/user_name_layout"
-            android:layout_toLeftOf="@+id/user_picture"
             android:text="Property Price" />
 
         <EditText
@@ -113,8 +102,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/user_name_layout"
-            android:layout_toLeftOf="@+id/user_picture"
             android:text="Down Payment" />
 
         <EditText
@@ -127,8 +114,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/user_name_layout"
-            android:layout_toLeftOf="@+id/user_picture"
             android:text="Annual Percentage Rate (APR)" />
 
         <EditText
@@ -141,15 +126,38 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/user_name_layout"
-            android:layout_toLeftOf="@+id/user_picture"
             android:text="Terms" />
 
-        <EditText
+        <RadioGroup
             android:id="@+id/terms"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton android:id="@+id/radio_15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15 years"/>
+
+            <RadioButton android:id="@+id/radio_30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="30 years"/>
+
+        </RadioGroup>
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none"/>
+            android:layout_alignParentLeft="true"
+            android:text="Monthy payment" />
+
+        <TextView
+            android:id="@+id/monthy_payment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"/>
+
 
         <Button
             android:id="@+id/save"
