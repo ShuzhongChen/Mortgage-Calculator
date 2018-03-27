@@ -126,6 +126,7 @@ public class Tab1NewEntry extends Fragment{
 
 
                         } catch (Exception e) {
+                            Log.d("exception", "" + e);
                             Toaster.toast("Cannot get geo info of this address!");
                         }
                     }
