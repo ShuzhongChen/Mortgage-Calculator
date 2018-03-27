@@ -23,13 +23,19 @@ public class BasicInfo implements Parcelable{
 
     public String zipcode;
 
-    public String propertyPrice;
+    public float propertyPrice;
 
-    public String downPayment;
+    public float downPayment;
 
-    public String apr;
+    public float apr;
 
-    public String terms;
+    public int terms;
+
+    public float monthyPayment;
+
+    public double lat;
+
+    public double lng;
 
     public BasicInfo() {
         id = UUID.randomUUID().toString();
@@ -43,10 +49,13 @@ public class BasicInfo implements Parcelable{
         city = in.readString();
         state = in.readString();
         zipcode = in.readString();
-        propertyPrice = in.readString();
-        downPayment = in.readString();
-        apr = in.readString();
-        terms = in.readString();
+        propertyPrice = in.readFloat();
+        downPayment = in.readFloat();
+        apr = in.readFloat();
+        terms = in.readInt();
+        monthyPayment = in.readFloat();
+        lat = in.readDouble();
+        lng = in.readDouble();
     }
 
     public static final Creator<BasicInfo> CREATOR = new Creator<BasicInfo>() {
@@ -74,9 +83,12 @@ public class BasicInfo implements Parcelable{
         parcel.writeString(city);
         parcel.writeString(state);
         parcel.writeString(zipcode);
-        parcel.writeString(propertyPrice);
-        parcel.writeString(downPayment);
-        parcel.writeString(apr);
-        parcel.writeString(terms);
+        parcel.writeFloat(propertyPrice);
+        parcel.writeFloat(downPayment);
+        parcel.writeFloat(apr);
+        parcel.writeInt(terms);
+        parcel.writeFloat(monthyPayment);
+        parcel.writeDouble(lat);
+        parcel.writeDouble(lng);
     }
 }
