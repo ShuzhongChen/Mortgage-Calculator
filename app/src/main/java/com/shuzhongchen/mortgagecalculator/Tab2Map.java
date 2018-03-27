@@ -96,6 +96,7 @@ public class Tab2Map extends Fragment {
                     }
                 }
 
+
                 initialization();
 
             }
@@ -185,6 +186,7 @@ public class Tab2Map extends Fragment {
                                     ModelUtils.save(getContext(), MODEL_BASICINFO, savedBasicInfo);
                                     thisMarker.remove();
                                     //dialogDetails.dismiss();
+                                    dialogDetails.onBackPressed();
                                     initialization();
                                 }
                             });
