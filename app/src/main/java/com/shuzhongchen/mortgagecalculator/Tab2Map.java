@@ -126,7 +126,7 @@ public class Tab2Map extends Fragment {
                 // For dropping a marker at a point on the Map
                 LatLng pos = new LatLng(geoInfo.lat, geoInfo.lng);
                 final Marker thisMarker = googleMap.addMarker(new MarkerOptions()
-                        .position(pos).title(geoInfo.propertyType).snippet(Float.toString(geoInfo.propertyPrice)));
+                        .position(pos).title(geoInfo.propertyType).snippet(Double.toString(geoInfo.propertyPrice)));
 
                 // For zooming automatically to the location of the marker
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(pos).zoom(12).build();
@@ -162,11 +162,11 @@ public class Tab2Map extends Fragment {
                             TextView city = dialogDetails.findViewById(R.id.city);
                             city.setText(geoInfo.city);
                             TextView loan = dialogDetails.findViewById(R.id.loan_amount);
-                            loan.setText(Float.toString(geoInfo.propertyPrice - geoInfo.downPayment));
+                            loan.setText(Double.toString(geoInfo.propertyPrice - geoInfo.downPayment));
                             TextView apr = dialogDetails.findViewById(R.id.apr);
-                            apr.setText(Float.toString(geoInfo.apr));
+                            apr.setText(Double.toString(geoInfo.apr));
                             TextView monthly = dialogDetails.findViewById(R.id.monthly_payment);
-                            monthly.setText(Float.toString(geoInfo.monthyPayment));
+                            monthly.setText(Double.toString(geoInfo.monthyPayment));
 
                             Button edit = dialogDetails.findViewById(R.id.btn_edit);
                             edit.setOnClickListener(new View.OnClickListener() {
