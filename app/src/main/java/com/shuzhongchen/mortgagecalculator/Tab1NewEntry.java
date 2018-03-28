@@ -282,7 +282,7 @@ public class Tab1NewEntry extends Fragment{
     }
 
     public void initialize() {
-        property_type.setText("");
+        /*property_type.setText("");
         street_address.setText("");
         city.setText("");
         zipcode.setText("");
@@ -297,13 +297,16 @@ public class Tab1NewEntry extends Fragment{
         propertyPrice = 0;
         downPayment = 0;
         apr = 0;
-        monthyPayment = 0;
+        monthyPayment = 0;*/
     }
 
     public void editDisplay(int i){
         BasicInfo geoInfo = basicInfos.get(i);
+        Log.d("GEO", geoInfo.streetAddress + "");
+        Log.d("GEO", geoInfo.propertyType + "");
         property_type.setText(geoInfo.propertyType);
-        street_address.setText(geoInfo.streetAddress);
+        //street_address.setText(geoInfo.streetAddress.toString());
+        street_address.setText("Debug!!!");
         city.setText(geoInfo.city);
         zipcode.setText(geoInfo.zipcode);
         state.setSelection(geoInfo.state);

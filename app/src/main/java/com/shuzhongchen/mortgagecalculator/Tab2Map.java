@@ -172,9 +172,9 @@ public class Tab2Map extends Fragment {
                                     bundle.putInt(PROPERTY_ID, index);
                                     Tab1NewEntry.setArguments(bundle);
                                     viewPager.setCurrentItem(0);
-                                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                    /*FragmentTransaction transaction = getFragmentManager().beginTransaction();
                                     transaction.replace(R.id.mapView, Tab1NewEntry );
-                                    transaction.commit();
+                                    transaction.commit();*/
                                 }
                             });
 
