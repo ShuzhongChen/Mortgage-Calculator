@@ -205,7 +205,16 @@ public class Tab1NewEntry extends Fragment{
                                 ModelUtils.save(getContext(), MODEL_BASICINFO, basicInfos);
 
                                 Toaster.toast("Your data has been saved!");
-                                initialize();
+
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        initialize();
+
+                                    }
+                                });
+
                             }
 
                         } catch (Exception e) {
