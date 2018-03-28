@@ -205,10 +205,20 @@ public class Tab1NewEntry extends Fragment{
                                 ModelUtils.save(getContext(), MODEL_BASICINFO, basicInfos);
 
                                 Toaster.toast("Your data has been saved!");
-                                initialize();
+                                getActivity().runOnUiThread(new Runnable(){
+                                    @Override
+                                    public void run() {
+
+                                        //stuff that updates ui
+                                        initialize();
+
+                                    }
+                                });
+
                             }
 
                         } catch (Exception e) {
+                            Log.d("Exception", "" + e);
                             Toaster.toast("Fail to save! Cannot get geo info of this address!");
                         }
                     }
