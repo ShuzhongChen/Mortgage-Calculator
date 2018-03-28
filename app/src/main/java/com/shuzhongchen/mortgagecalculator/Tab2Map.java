@@ -9,8 +9,10 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -51,16 +54,10 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class Tab2Map extends Fragment {
 
-    /*@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tab2map, container, false);
-        return rootView;
-    }*/
-
     MapView mMapView;
     private GoogleMap googleMap;
     private static final String MODEL_BASICINFO = "model_basicinfo";
+    private static final String PROPERTY_ID = "property_id";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -96,6 +93,8 @@ public class Tab2Map extends Fragment {
                     }
                 }
 
+                UiSettings mapUISetting = googleMap.getUiSettings();
+                mapUISetting.setZoomControlsEnabled(true);
 
                 initialization();
 
@@ -141,17 +140,6 @@ public class Tab2Map extends Fragment {
                         if (marker.equals(thisMarker)) {
                             Log.d("Click", "test");
 
-                            /*final AlertDialog.Builder dialogDetails = new AlertDialog.Builder(getActivity());
-                            dialogDetails.setTitle("Property Details");
-                            dialogDetails.setMessage(geoInfo.propertyType);
-                            dialogDetails.setPositiveButton("Delete",new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    savedBasicInfo.remove(geoInfo);
-                                    ModelUtils.save(getContext(), MODEL_BASICINFO, savedBasicInfo);
-                                    initialization();
-                                }
-                            });*/
-
                             final Dialog dialogDetails = new Dialog(getActivity());
                             dialogDetails.setTitle("Property Details");
                             dialogDetails.setContentView(R.layout.dialog_details);
@@ -170,22 +158,30 @@ public class Tab2Map extends Fragment {
                             monthly.setText(Double.toString(geoInfo.monthyPayment));
 
                             Button edit = dialogDetails.findViewById(R.id.btn_edit);
-                            edit.setOnClickListener(new View.OnClickListener() {
-                                public void onClick(View v) {
+                            final ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.container);
+                            edit.setOnClickListener(new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    dialogDetails.onBackPressed();
                                     Fragment Tab1NewEntry = new Tab1NewEntry();
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString(PROPERTY_ID, geoInfo.id);
+                                    Tab1NewEntry.setArguments(bundle);
+                                    viewPager.setCurrentItem(0);
                                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                    transaction.replace(R.id.calView, Tab1NewEntry ); // give your fragment container id in first parameter
-                                    transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
+                                    transaction.replace(R.id.mapView, Tab1NewEntry );
                                     transaction.commit();
                                 }
                             });
+
                             Button delete = dialogDetails.findViewById(R.id.btn_delete);
                             delete.setOnClickListener(new View.OnClickListener() {
                                 public void onClick(View v) {
                                     savedBasicInfo.remove(geoInfo);
                                     ModelUtils.save(getContext(), MODEL_BASICINFO, savedBasicInfo);
                                     thisMarker.remove();
-                                    //dialogDetails.dismiss();
                                     dialogDetails.onBackPressed();
                                     initialization();
                                 }

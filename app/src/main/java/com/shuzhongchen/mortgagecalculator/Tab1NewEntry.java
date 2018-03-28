@@ -44,6 +44,7 @@ import xdroid.toaster.Toaster;
 public class Tab1NewEntry extends Fragment{
 
     private static final String MODEL_BASICINFO = "model_basicinfo";
+    private static final String PROPERTY_ID = "property_id";
 
     private List<BasicInfo> basicInfos;
 
@@ -68,13 +69,11 @@ public class Tab1NewEntry extends Fragment{
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.tab1newentry, container, false);
 
-
         property_type = rootView.findViewById(R.id.property_type);
         street_address = rootView.findViewById(R.id.street_address);
         state = rootView.findViewById(R.id.state);
         city = rootView.findViewById(R.id.city);
         zipcode = rootView.findViewById(R.id.zipcode);
-
         monthy_payment = rootView.findViewById(R.id.monthy_payment);
 
         property_price = rootView.findViewById(R.id.property_price);
@@ -90,8 +89,6 @@ public class Tab1NewEntry extends Fragment{
                 }
             }
         });
-
-
 
         down_payment = rootView.findViewById(R.id.down_payment);
         down_payment.addTextChangedListener(new TextWatcher () {
@@ -139,13 +136,17 @@ public class Tab1NewEntry extends Fragment{
             }
         });
 
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            String property_id = bundle.getString(PROPERTY_ID);
+            Toast.makeText(getActivity().getApplication().getApplicationContext(),
+                    "Fragment changed!" + property_id, Toast.LENGTH_LONG).show();
+        }
 
         List<BasicInfo> savedBasicInfo = ModelUtils.read(getContext(),
                 MODEL_BASICINFO,
                 new TypeToken<List<BasicInfo>>(){});
         basicInfos = savedBasicInfo == null ? new ArrayList<BasicInfo>() : savedBasicInfo;
-
-
 
         save = rootView.findViewById(R.id.save);
         save.setOnClickListener(new View.OnClickListener() {
