@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
+import com.shuzhongchen.mortgagecalculator.helper.ReceiverInterface;
 import com.shuzhongchen.mortgagecalculator.model.BasicInfo;
 import com.shuzhongchen.mortgagecalculator.util.ModelUtils;
 
@@ -34,6 +35,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +43,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import xdroid.toaster.Toaster;
 
-public class Tab1NewEntry extends Fragment{
+public class Tab1NewEntry extends Fragment implements ReceiverInterface {
 
     private static final String MODEL_BASICINFO = "model_basicinfo";
     private static final String PROPERTY_ID = "property_id";
@@ -60,7 +62,7 @@ public class Tab1NewEntry extends Fragment{
 
 
     double propertyPrice, downPayment, apr, monthyPayment;
-    int terms;
+    int terms, index;
 
 
 
@@ -145,7 +147,13 @@ public class Tab1NewEntry extends Fragment{
         save.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                final BasicInfo basicInfo = new BasicInfo();
+                final BasicInfo basicInfo;
+
+                if (index == -1) {
+                    basicInfo = new BasicInfo();
+                } else {
+                    basicInfo = basicInfos.get(index);
+                }
 
                 basicInfo.propertyType = property_type.getText().toString();
 
@@ -190,13 +198,14 @@ public class Tab1NewEntry extends Fragment{
                             Log.d("latitude", "" + lat);
                             Log.d("longitude", "" + lng);
                             String status = (String)jsonObject.get("status");
-                            Log.d("shuzhong debug status: ",status);
+
                             if (status.equals("OK")) {
 
                                 basicInfo.lat = lat;
                                 basicInfo.lng = lng;
-
-                                basicInfos.add(basicInfo);
+                                if (index == -1) {
+                                    basicInfos.add(basicInfo);
+                                }
                                 ModelUtils.save(getContext(), MODEL_BASICINFO, basicInfos);
 
                                 Toaster.toast("Your data has been saved!");
@@ -221,15 +230,7 @@ public class Tab1NewEntry extends Fragment{
             }
         });
 
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            Integer property_id = bundle.getInt(PROPERTY_ID);
-            Toast.makeText(getActivity().getApplication().getApplicationContext(), "Fragment changed!" + property_id, Toast.LENGTH_LONG).show();
-            editDisplay(property_id);
-        } else {
-            initialize();
-        }
-
+        initialize();
         return rootView;
     }
 
@@ -273,7 +274,7 @@ public class Tab1NewEntry extends Fragment{
 
         monthyPayment = loan * mir * Math.pow(1 + mir, terms) / (Math.pow(1 + mir, terms) + 1);
 
-        monthy_payment.setText(monthyPayment + "");
+        monthy_payment.setText(formatDouble(monthyPayment));
 
     }
 
@@ -282,7 +283,7 @@ public class Tab1NewEntry extends Fragment{
     }
 
     public void initialize() {
-        /*property_type.setText("");
+        property_type.setText("");
         street_address.setText("");
         city.setText("");
         zipcode.setText("");
@@ -297,32 +298,45 @@ public class Tab1NewEntry extends Fragment{
         propertyPrice = 0;
         downPayment = 0;
         apr = 0;
-        monthyPayment = 0;*/
+        monthyPayment = 0;
+        index = -1;
     }
 
     public void editDisplay(int i){
+        index = i;
+
         BasicInfo geoInfo = basicInfos.get(i);
-        Log.d("GEO", geoInfo.streetAddress + "");
-        Log.d("GEO", geoInfo.propertyType + "");
+
         property_type.setText(geoInfo.propertyType);
-        //street_address.setText(geoInfo.streetAddress.toString());
-        street_address.setText("Debug!!!");
+        street_address.setText(geoInfo.streetAddress.toString());
+
         city.setText(geoInfo.city);
         zipcode.setText(geoInfo.zipcode);
         state.setSelection(geoInfo.state);
         property_price.setText(Double.toString(geoInfo.propertyPrice));
         down_payment.setText(Double.toString(geoInfo.downPayment));
         annual_percentage_rate.setText(Double.toString(geoInfo.apr));
-        monthy_payment.setText(Double.toString(geoInfo.monthyPayment));
+        monthy_payment.setText(formatDouble(geoInfo.monthyPayment));
         if (geoInfo.terms == 15) {
             terms_radio_group.check(R.id.radio_15);
         } else {
             terms_radio_group.check(R.id.radio_30);
         }
+
         terms = geoInfo.terms;
         propertyPrice = geoInfo.propertyPrice;
         downPayment = geoInfo.downPayment;
         apr = geoInfo.apr;
         monthyPayment = geoInfo.monthyPayment;
+    }
+
+    public String formatDouble(double s) {
+        DecimalFormat fmt = new DecimalFormat("##0.00");
+        return fmt.format(s);
+    }
+
+    @Override
+    public void receiveMessage(int index) {
+        editDisplay(index);
     }
 }

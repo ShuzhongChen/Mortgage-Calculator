@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.reflect.TypeToken;
+import com.shuzhongchen.mortgagecalculator.helper.FragmentCommunication;
 import com.shuzhongchen.mortgagecalculator.model.BasicInfo;
 import com.shuzhongchen.mortgagecalculator.util.ModelUtils;
 
@@ -136,10 +137,10 @@ public class Tab2Map extends Fragment {
                 googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
-
+                        Log.d("Shuzhong ", "onMarkerClick");
                         // Auto-generated method stub
                         if (marker.equals(thisMarker)) {
-                            Log.d("Click", "test");
+                            Log.d("Shuzhong ", "marker.equals");
 
                             final Dialog dialogDetails = new Dialog(getActivity());
                             dialogDetails.setTitle("Property Details");
@@ -166,15 +167,17 @@ public class Tab2Map extends Fragment {
                                 public void onClick(View v)
                                 {
                                     dialogDetails.onBackPressed();
-                                    Fragment Tab1NewEntry = new Tab1NewEntry();
-                                    Bundle bundle = new Bundle();
-                                    Log.d("Index", "" + index);
-                                    bundle.putInt(PROPERTY_ID, index);
-                                    Tab1NewEntry.setArguments(bundle);
+                                    //Fragment Tab1NewEntry = new Tab1NewEntry();
+                                    //Bundle bundle = new Bundle();
+                                    //Log.d("Index", "" + index);
+                                    //bundle.putInt(PROPERTY_ID, index);
+                                    ((FragmentCommunication) getActivity()).passIndex(index);
+                                    //Tab1NewEntry.setArguments(bundle);
                                     viewPager.setCurrentItem(0);
-                                    /*FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                    transaction.replace(R.id.mapView, Tab1NewEntry );
-                                    transaction.commit();*/
+                                    //viewPager.setCurrentItem(0);
+                                    //FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                    //transaction.replace(R.id.mapView, Tab1NewEntry );
+                                    //transaction.commit();
                                 }
                             });
 
