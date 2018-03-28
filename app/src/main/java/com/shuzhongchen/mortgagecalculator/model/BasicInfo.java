@@ -19,7 +19,7 @@ public class BasicInfo implements Parcelable{
 
     public String city;
 
-    public String state;
+    public int state;
 
     public String zipcode;
 
@@ -47,7 +47,7 @@ public class BasicInfo implements Parcelable{
         propertyType = in.readString();
         streetAddress = in.readString();
         city = in.readString();
-        state = in.readString();
+        state = in.readInt();
         zipcode = in.readString();
         propertyPrice = in.readDouble();
         downPayment = in.readDouble();
@@ -81,7 +81,7 @@ public class BasicInfo implements Parcelable{
         parcel.writeString(propertyType);
         parcel.writeString(streetAddress);
         parcel.writeString(city);
-        parcel.writeString(state);
+        parcel.writeInt(state);
         parcel.writeString(zipcode);
         parcel.writeDouble(propertyPrice);
         parcel.writeDouble(downPayment);

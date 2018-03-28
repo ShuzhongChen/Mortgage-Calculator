@@ -136,13 +136,6 @@ public class Tab1NewEntry extends Fragment{
             }
         });
 
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            String property_id = bundle.getString(PROPERTY_ID);
-            Toast.makeText(getActivity().getApplication().getApplicationContext(),
-                    "Fragment changed!" + property_id, Toast.LENGTH_LONG).show();
-        }
-
         List<BasicInfo> savedBasicInfo = ModelUtils.read(getContext(),
                 MODEL_BASICINFO,
                 new TypeToken<List<BasicInfo>>(){});
@@ -158,7 +151,8 @@ public class Tab1NewEntry extends Fragment{
 
                 basicInfo.streetAddress = street_address.getText().toString();
                 basicInfo.city = city.getText().toString();
-                basicInfo.state = state.getSelectedItem().toString();
+                basicInfo.state = state.getSelectedItemPosition();
+                String sState = state.getSelectedItem().toString();
                 basicInfo.zipcode = zipcode.getText().toString();
 
                 basicInfo.propertyPrice = propertyPrice;
@@ -173,7 +167,7 @@ public class Tab1NewEntry extends Fragment{
                 }
 
                 final String tmpUrl = "http://maps.google.com/maps/api/geocode/json?address=" +
-                        basicInfo.streetAddress + " " + basicInfo.city + " " + basicInfo.state + " " + basicInfo.zipcode + "&sensor=false";
+                        basicInfo.streetAddress + " " + basicInfo.city + " " + sState + " " + basicInfo.zipcode + "&sensor=false";
                 final String googleMapUrl = tmpUrl.replaceAll(" ", "+");
                 new Thread(new Runnable() {
                     @Override
@@ -227,7 +221,14 @@ public class Tab1NewEntry extends Fragment{
             }
         });
 
-        initialize();
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            Integer property_id = bundle.getInt(PROPERTY_ID);
+            Toast.makeText(getActivity().getApplication().getApplicationContext(), "Fragment changed!" + property_id, Toast.LENGTH_LONG).show();
+            editDisplay(property_id);
+        } else {
+            initialize();
+        }
 
         return rootView;
     }
@@ -287,15 +288,38 @@ public class Tab1NewEntry extends Fragment{
         zipcode.setText("");
         state.setSelection(-1);
 
-
         property_price.setText("0");
         down_payment.setText("0");
         annual_percentage_rate.setText("0");
+        monthy_payment.setText("0");
         terms_radio_group.check(R.id.radio_15);
         terms = 15;
         propertyPrice = 0;
         downPayment = 0;
         apr = 0;
         monthyPayment = 0;
+    }
+
+    public void editDisplay(int i){
+        BasicInfo geoInfo = basicInfos.get(i);
+        property_type.setText(geoInfo.propertyType);
+        street_address.setText(geoInfo.streetAddress);
+        city.setText(geoInfo.city);
+        zipcode.setText(geoInfo.zipcode);
+        state.setSelection(geoInfo.state);
+        property_price.setText(Double.toString(geoInfo.propertyPrice));
+        down_payment.setText(Double.toString(geoInfo.downPayment));
+        annual_percentage_rate.setText(Double.toString(geoInfo.apr));
+        monthy_payment.setText(Double.toString(geoInfo.monthyPayment));
+        if (geoInfo.terms == 15) {
+            terms_radio_group.check(R.id.radio_15);
+        } else {
+            terms_radio_group.check(R.id.radio_30);
+        }
+        terms = geoInfo.terms;
+        propertyPrice = geoInfo.propertyPrice;
+        downPayment = geoInfo.downPayment;
+        apr = geoInfo.apr;
+        monthyPayment = geoInfo.monthyPayment;
     }
 }

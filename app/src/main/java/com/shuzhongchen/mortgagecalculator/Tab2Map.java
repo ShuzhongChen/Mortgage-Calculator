@@ -122,6 +122,7 @@ public class Tab2Map extends Fragment {
         } else {
             for (int i = 0; i < savedBasicInfo.size(); i++) {
                 final BasicInfo geoInfo = savedBasicInfo.get(i);
+                final int index = i;
 
                 // For dropping a marker at a point on the Map
                 LatLng pos = new LatLng(geoInfo.lat, geoInfo.lng);
@@ -167,7 +168,8 @@ public class Tab2Map extends Fragment {
                                     dialogDetails.onBackPressed();
                                     Fragment Tab1NewEntry = new Tab1NewEntry();
                                     Bundle bundle = new Bundle();
-                                    bundle.putString(PROPERTY_ID, geoInfo.id);
+                                    Log.d("Index", "" + index);
+                                    bundle.putInt(PROPERTY_ID, index);
                                     Tab1NewEntry.setArguments(bundle);
                                     viewPager.setCurrentItem(0);
                                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
