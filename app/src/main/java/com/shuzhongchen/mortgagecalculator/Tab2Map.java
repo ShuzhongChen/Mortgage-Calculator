@@ -106,6 +106,7 @@ public class Tab2Map extends Fragment {
                 googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(final Marker marker) {
+
                         Log.d("Shuzhong getSnippet", marker.getSnippet() + "");
                         Log.d("Shuzhong marker size", markers.size() + "");
                         Log.d("Shuzhong basic size", savedBasicInfo.size() + "");
@@ -153,18 +154,8 @@ public class Tab2Map extends Fragment {
                             public void onClick(View v)
                             {
                                 dialogDetails.onBackPressed();
-                                //Fragment Tab1NewEntry = new Tab1NewEntry();
-                                //Bundle bundle = new Bundle();
-                                //Log.d("Index", "" + index);
-                                //bundle.putInt(PROPERTY_ID, index);
                                 ((FragmentCommunication) getActivity()).passIndex(i);
-                                marker.remove();
-                                //Tab1NewEntry.setArguments(bundle);
                                 viewPager.setCurrentItem(0);
-                                //viewPager.setCurrentItem(0);
-                                //FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                //transaction.replace(R.id.mapView, Tab1NewEntry );
-                                //transaction.commit();
                             }
                         });
 
@@ -173,7 +164,6 @@ public class Tab2Map extends Fragment {
                             public void onClick(View v) {
                                 savedBasicInfo.remove(geoInfo);
                                 ModelUtils.save(getContext(), MODEL_BASICINFO, savedBasicInfo);
-                                marker.remove();
                                 dialogDetails.onBackPressed();
                                 initialization();
                             }
@@ -182,8 +172,6 @@ public class Tab2Map extends Fragment {
                         dialogDetails.show();
 
                         return true;
-
-                        //return false;
 
                     }
                 });
@@ -203,6 +191,7 @@ public class Tab2Map extends Fragment {
     }
 
     private void initialization() {
+        googleMap.clear();
         savedBasicInfo = ModelUtils.read(getContext(), MODEL_BASICINFO,
                 new TypeToken<List<BasicInfo>>(){});
         markers = new ArrayList<Marker>();

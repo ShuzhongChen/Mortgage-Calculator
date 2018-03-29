@@ -313,6 +313,10 @@ public class Tab1NewEntry extends Fragment implements ReceiverInterface {
     public void editDisplay(int i){
         index = i;
 
+        basicInfos = ModelUtils.read(getContext(),
+                MODEL_BASICINFO,
+                new TypeToken<List<BasicInfo>>(){});
+
         BasicInfo geoInfo = basicInfos.get(i);
 
         if (geoInfo.propertyType.equals("House")) {
