@@ -1,7 +1,6 @@
 package com.shuzhongchen.mortgagecalculator;
 
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -10,19 +9,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
-import android.widget.TextView;
+import com.shuzhongchen.mortgagecalculator.helper.FragmentCommunication;
+import com.shuzhongchen.mortgagecalculator.helper.ReceiverInterface;
 
-import com.shuzhongchen.mortgagecalculator.model.BasicInfo;
-
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FragmentCommunication {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -38,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+
+    private Tab1NewEntry tab1;
+    private Tab2Map tab2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +79,13 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void passIndex(int index) {
+        if (tab1 instanceof ReceiverInterface){
+            ((ReceiverInterface) tab1).receiveMessage(index);
+        }
+    }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -98,10 +101,10 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    Tab1NewEntry tab1 = new Tab1NewEntry();
+                    tab1 = new Tab1NewEntry();
                     return tab1;
                 case 1:
-                    Tab2Map tab2 = new Tab2Map();
+                    tab2 = new Tab2Map();
                     return tab2;
                 default:
                     return null;

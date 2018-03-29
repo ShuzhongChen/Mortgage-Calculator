@@ -13,4 +13,5 @@
     <dimen name="icon_button_size">24dp</dimen>
 
     <dimen name="caption_text_size">25sp</dimen>
+    <dimen name="large_text">20sp</dimen>
 </resources>
