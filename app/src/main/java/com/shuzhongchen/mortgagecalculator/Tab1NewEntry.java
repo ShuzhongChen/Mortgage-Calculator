@@ -50,12 +50,12 @@ public class Tab1NewEntry extends Fragment implements ReceiverInterface {
 
     private List<BasicInfo> basicInfos;
 
-    Button save;
+    Button save, clear;
     Spinner state;
-    EditText property_type, street_address, city, zipcode, property_price, down_payment,
+    EditText street_address, city, zipcode, property_price, down_payment,
             annual_percentage_rate;
 
-    RadioGroup terms_radio_group;
+    RadioGroup terms_radio_group, property_type;
 
     TextView monthy_payment;
 
@@ -143,6 +143,13 @@ public class Tab1NewEntry extends Fragment implements ReceiverInterface {
                 new TypeToken<List<BasicInfo>>(){});
         basicInfos = savedBasicInfo == null ? new ArrayList<BasicInfo>() : savedBasicInfo;
 
+        clear = rootView.findViewById(R.id.clear);
+        clear.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                initialize();
+            }
+        });
+
         save = rootView.findViewById(R.id.save);
         save.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -155,7 +162,8 @@ public class Tab1NewEntry extends Fragment implements ReceiverInterface {
                     basicInfo = basicInfos.get(index);
                 }
 
-                basicInfo.propertyType = property_type.getText().toString();
+                String radiovalue = ((RadioButton)getView().findViewById(property_type.getCheckedRadioButtonId())).getText().toString();
+                basicInfo.propertyType = radiovalue;
 
                 basicInfo.streetAddress = street_address.getText().toString();
                 basicInfo.city = city.getText().toString();
@@ -283,11 +291,11 @@ public class Tab1NewEntry extends Fragment implements ReceiverInterface {
     }
 
     public void initialize() {
-        property_type.setText("");
+        property_type.check(R.id.house);
         street_address.setText("");
         city.setText("");
         zipcode.setText("");
-        state.setSelection(-1);
+        state.setSelection(5);
 
         property_price.setText("0");
         down_payment.setText("0");
@@ -307,7 +315,14 @@ public class Tab1NewEntry extends Fragment implements ReceiverInterface {
 
         BasicInfo geoInfo = basicInfos.get(i);
 
-        property_type.setText(geoInfo.propertyType);
+        if (geoInfo.propertyType.equals("House")) {
+            property_type.check(R.id.house);
+        } else if (geoInfo.propertyType.equals("Condo")) {
+            property_type.check(R.id.condo);
+        } else {
+            property_type.check(R.id.townhouse);
+        }
+
         street_address.setText(geoInfo.streetAddress.toString());
 
         city.setText(geoInfo.city);

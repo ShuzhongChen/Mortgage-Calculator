@@ -22,11 +22,28 @@
             android:layout_alignParentLeft="true"
             android:text="Property Type" />
 
-        <EditText
+        <RadioGroup
             android:id="@+id/property_type"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:inputType="none"/>
+            android:orientation="horizontal">
+
+            <RadioButton android:id="@+id/house"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="House"/>
+
+            <RadioButton android:id="@+id/townhouse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Town House"/>
+
+            <RadioButton android:id="@+id/condo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Condo"/>
+
+        </RadioGroup>
 
         <TextView
             android:layout_width="match_parent"
@@ -158,13 +175,31 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"/>
 
-
-        <Button
-            android:id="@+id/save"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="50dp"
-            android:text="Save" />
+            android:padding="@dimen/spacing_medium"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/clear"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginBottom="50dp"
+                android:text="New" />
+
+            <Button
+                android:id="@+id/save"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginBottom="50dp"
+                android:text="Save" />
+
+
+
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

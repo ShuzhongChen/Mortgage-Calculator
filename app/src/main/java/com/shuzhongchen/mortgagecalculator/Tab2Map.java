@@ -60,6 +60,9 @@ public class Tab2Map extends Fragment {
     private static final String MODEL_BASICINFO = "model_basicinfo";
     private static final String PROPERTY_ID = "property_id";
 
+    private List<BasicInfo> savedBasicInfo;
+    private List<Marker> markers;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.tab2map, container, false);
@@ -99,6 +102,91 @@ public class Tab2Map extends Fragment {
 
                 initialization();
 
+
+                googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(final Marker marker) {
+                        Log.d("Shuzhong getSnippet", marker.getSnippet() + "");
+                        Log.d("Shuzhong marker size", markers.size() + "");
+                        Log.d("Shuzhong basic size", savedBasicInfo.size() + "");
+                        // Auto-generated method stub
+                        int markerIndex = -1;
+
+                        for (int i = 0; i < markers.size(); i++) {
+                            if (markers.get(i).getSnippet().equals(marker.getSnippet())) {
+                                markerIndex = i;
+                                break;
+                            }
+
+                        }
+
+                        if (markerIndex == -1) {
+                            return false;
+                        }
+
+                        final int i = markerIndex;
+
+                        final BasicInfo geoInfo = savedBasicInfo.get(markerIndex);
+
+                        final Dialog dialogDetails = new Dialog(getActivity());
+                        dialogDetails.setTitle("Property Details");
+                        dialogDetails.setContentView(R.layout.dialog_details);
+
+                        TextView propertyType = dialogDetails.findViewById(R.id.property_type);
+                        propertyType.setText(geoInfo.propertyType);
+                        TextView address = dialogDetails.findViewById(R.id.street_address);
+                        address.setText(geoInfo.streetAddress);
+                        TextView city = dialogDetails.findViewById(R.id.city);
+                        city.setText(geoInfo.city);
+                        TextView loan = dialogDetails.findViewById(R.id.loan_amount);
+                        loan.setText(Double.toString(geoInfo.propertyPrice - geoInfo.downPayment));
+                        TextView apr = dialogDetails.findViewById(R.id.apr);
+                        apr.setText(Double.toString(geoInfo.apr));
+                        TextView monthly = dialogDetails.findViewById(R.id.monthly_payment);
+                        monthly.setText(Double.toString(geoInfo.monthyPayment));
+
+                        Button edit = dialogDetails.findViewById(R.id.btn_edit);
+                        final ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.container);
+                        edit.setOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                dialogDetails.onBackPressed();
+                                //Fragment Tab1NewEntry = new Tab1NewEntry();
+                                //Bundle bundle = new Bundle();
+                                //Log.d("Index", "" + index);
+                                //bundle.putInt(PROPERTY_ID, index);
+                                ((FragmentCommunication) getActivity()).passIndex(i);
+                                marker.remove();
+                                //Tab1NewEntry.setArguments(bundle);
+                                viewPager.setCurrentItem(0);
+                                //viewPager.setCurrentItem(0);
+                                //FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                //transaction.replace(R.id.mapView, Tab1NewEntry );
+                                //transaction.commit();
+                            }
+                        });
+
+                        Button delete = dialogDetails.findViewById(R.id.btn_delete);
+                        delete.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                savedBasicInfo.remove(geoInfo);
+                                ModelUtils.save(getContext(), MODEL_BASICINFO, savedBasicInfo);
+                                marker.remove();
+                                dialogDetails.onBackPressed();
+                                initialization();
+                            }
+                        });
+
+                        dialogDetails.show();
+
+                        return true;
+
+                        //return false;
+
+                    }
+                });
             }
         });
 
@@ -115,91 +203,25 @@ public class Tab2Map extends Fragment {
     }
 
     private void initialization() {
-        final List<BasicInfo> savedBasicInfo = ModelUtils.read(getContext(), MODEL_BASICINFO,
+        savedBasicInfo = ModelUtils.read(getContext(), MODEL_BASICINFO,
                 new TypeToken<List<BasicInfo>>(){});
+        markers = new ArrayList<Marker>();
         if (savedBasicInfo == null) {
             Toast.makeText(getActivity().getApplication().getApplicationContext(),
                     "No saved property!", Toast.LENGTH_LONG).show();
         } else {
             for (int i = 0; i < savedBasicInfo.size(); i++) {
                 final BasicInfo geoInfo = savedBasicInfo.get(i);
-                final int index = i;
 
                 // For dropping a marker at a point on the Map
                 LatLng pos = new LatLng(geoInfo.lat, geoInfo.lng);
-                final Marker thisMarker = googleMap.addMarker(new MarkerOptions()
-                        .position(pos).title(geoInfo.propertyType).snippet(Double.toString(geoInfo.propertyPrice)));
+                Marker m = googleMap.addMarker(new MarkerOptions()
+                        .position(pos).title(geoInfo.propertyType).snippet("id" + i));
+                markers.add(m);
 
                 // For zooming automatically to the location of the marker
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(pos).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-                googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                    @Override
-                    public boolean onMarkerClick(Marker marker) {
-                        Log.d("Shuzhong ", "onMarkerClick");
-                        // Auto-generated method stub
-                        if (marker.equals(thisMarker)) {
-                            Log.d("Shuzhong ", "marker.equals");
-
-                            final Dialog dialogDetails = new Dialog(getActivity());
-                            dialogDetails.setTitle("Property Details");
-                            dialogDetails.setContentView(R.layout.dialog_details);
-
-                            TextView propertyType = dialogDetails.findViewById(R.id.property_type);
-                            propertyType.setText(geoInfo.propertyType);
-                            TextView address = dialogDetails.findViewById(R.id.street_address);
-                            address.setText(geoInfo.streetAddress);
-                            TextView city = dialogDetails.findViewById(R.id.city);
-                            city.setText(geoInfo.city);
-                            TextView loan = dialogDetails.findViewById(R.id.loan_amount);
-                            loan.setText(Double.toString(geoInfo.propertyPrice - geoInfo.downPayment));
-                            TextView apr = dialogDetails.findViewById(R.id.apr);
-                            apr.setText(Double.toString(geoInfo.apr));
-                            TextView monthly = dialogDetails.findViewById(R.id.monthly_payment);
-                            monthly.setText(Double.toString(geoInfo.monthyPayment));
-
-                            Button edit = dialogDetails.findViewById(R.id.btn_edit);
-                            final ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.container);
-                            edit.setOnClickListener(new View.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(View v)
-                                {
-                                    dialogDetails.onBackPressed();
-                                    //Fragment Tab1NewEntry = new Tab1NewEntry();
-                                    //Bundle bundle = new Bundle();
-                                    //Log.d("Index", "" + index);
-                                    //bundle.putInt(PROPERTY_ID, index);
-                                    ((FragmentCommunication) getActivity()).passIndex(index);
-                                    //Tab1NewEntry.setArguments(bundle);
-                                    viewPager.setCurrentItem(0);
-                                    //viewPager.setCurrentItem(0);
-                                    //FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                    //transaction.replace(R.id.mapView, Tab1NewEntry );
-                                    //transaction.commit();
-                                }
-                            });
-
-                            Button delete = dialogDetails.findViewById(R.id.btn_delete);
-                            delete.setOnClickListener(new View.OnClickListener() {
-                                public void onClick(View v) {
-                                    savedBasicInfo.remove(geoInfo);
-                                    ModelUtils.save(getContext(), MODEL_BASICINFO, savedBasicInfo);
-                                    thisMarker.remove();
-                                    dialogDetails.onBackPressed();
-                                    initialization();
-                                }
-                            });
-
-                            dialogDetails.show();
-
-                            return true;
-                        }
-                        return false;
-
-                    }
-                });
             }
         }
     }
