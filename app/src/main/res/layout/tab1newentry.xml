@@ -131,7 +131,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="Annual Percentage Rate (APR)" />
+            android:text="Annual Percentage Rate (%)" />
 
         <EditText
             android:id="@+id/annual_percentage_rate"
