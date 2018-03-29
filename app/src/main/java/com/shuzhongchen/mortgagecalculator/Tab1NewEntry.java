@@ -4,6 +4,8 @@ package com.shuzhongchen.mortgagecalculator;
  * Created by shuzhongchen on 3/24/18.
  */
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -32,12 +34,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -46,7 +50,6 @@ import xdroid.toaster.Toaster;
 public class Tab1NewEntry extends Fragment implements ReceiverInterface {
 
     private static final String MODEL_BASICINFO = "model_basicinfo";
-    private static final String PROPERTY_ID = "property_id";
 
     private List<BasicInfo> basicInfos;
 
@@ -177,64 +180,110 @@ public class Tab1NewEntry extends Fragment implements ReceiverInterface {
                 basicInfo.terms = terms;
                 basicInfo.monthyPayment = monthyPayment;
 
-                if (basicInfo.streetAddress.length() == 0 && city.length() == 0) {
+                if (basicInfo.streetAddress.length() == 0 || city.length() == 0) {
                     Toaster.toast("Fail to save! Please enter street address and city!");
                     return;
                 }
 
-                final String tmpUrl = "http://maps.google.com/maps/api/geocode/json?address=" +
-                        basicInfo.streetAddress + " " + basicInfo.city + " " + sState + " " + basicInfo.zipcode + "&sensor=false";
-                final String googleMapUrl = tmpUrl.replaceAll(" ", "+");
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            String response = getLatLongByURL(
-                                    googleMapUrl);
-                            Log.d("response",""+response);
-                            Log.d("googleMapUrl",""+googleMapUrl);
+                if (annual_percentage_rate.length() == 0) {
+                    Toaster.toast("Fail to save! Please enter annual percentage rate!");
+                    return;
+                }
 
-                            JSONObject jsonObject = new JSONObject(response);
-                            double lng = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
-                                    .getJSONObject("geometry").getJSONObject("location")
-                                    .getDouble("lng");
+                boolean valid = true;
+                double lat;
+                double lng;
+                Geocoder geoCoder = new Geocoder(getContext(), Locale.getDefault());
+                try {
+                    List<Address> addresses =
+                            geoCoder.getFromLocationName(basicInfo.streetAddress + "," +
+                                    basicInfo.city + "," + sState, 2);
 
-                            double lat = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
-                                    .getJSONObject("geometry").getJSONObject("location")
-                                    .getDouble("lat");
+                    if (addresses.size() < 1) {
+                        valid = false;
+                    } else {
+                        lat = addresses.get(0).getLatitude();
+                        lng = addresses.get(0).getLongitude();
+                        Log.d("coor", "" + lat);
+                        Log.d("coor", "" + lng);
+                        basicInfo.lat = lat;
+                        basicInfo.lng = lng;
+                        if (index == -1) {
+                            basicInfos.add(basicInfo);
+                        }
+                        ModelUtils.save(getContext(), MODEL_BASICINFO, basicInfos);
 
-                            Log.d("latitude", "" + lat);
-                            Log.d("longitude", "" + lng);
-                            String status = (String)jsonObject.get("status");
+                        Toaster.toast("Your data has been saved!");
+                        initialize();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    valid = false;
+                }
 
-                            if (status.equals("OK")) {
+                if (!valid) {
+                    Toaster.toast("Please provide valid address!");
+                } else  {
+                    /*final String tmpUrl = "http://maps.google.com/maps/api/geocode/json?address=" +
+                            basicInfo.streetAddress + " " + basicInfo.city + " " + sState + " " + basicInfo.zipcode + "&sensor=false";
+                    final String googleMapUrl = tmpUrl.replaceAll(" ", "+");
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                String response = getLatLongByURL(
+                                        googleMapUrl);
+                                Log.d("response", "" + response);
+                                Log.d("googleMapUrl", "" + googleMapUrl);
 
-                                basicInfo.lat = lat;
-                                basicInfo.lng = lng;
-                                if (index == -1) {
-                                    basicInfos.add(basicInfo);
-                                }
-                                ModelUtils.save(getContext(), MODEL_BASICINFO, basicInfos);
 
-                                Toaster.toast("Your data has been saved!");
-                                getActivity().runOnUiThread(new Runnable(){
-                                    @Override
-                                    public void run() {
+                                JSONObject jsonObject = new JSONObject(response);
+                                JSONArray result = (JSONArray) jsonObject.get("results");
+                                Log.d("json", "" + result);
+                                if (result.length() > 0) {
+                                    double lng = result.getJSONObject(0)
+                                            .getJSONObject("geometry").getJSONObject("location")
+                                            .getDouble("lng");
 
-                                        //stuff that updates ui
-                                        initialize();
+                                    double lat = result.getJSONObject(0)
+                                            .getJSONObject("geometry").getJSONObject("location")
+                                            .getDouble("lat");
+
+                                    Log.d("latitude", "" + lat);
+                                    Log.d("longitude", "" + lng);
+                                    String status = (String) jsonObject.get("status");
+
+                                    if (status.equals("OK")) {
+
+                                        basicInfo.lat = lat;
+                                        basicInfo.lng = lng;
+                                        if (index == -1) {
+                                            basicInfos.add(basicInfo);
+                                        }
+                                        ModelUtils.save(getContext(), MODEL_BASICINFO, basicInfos);
+
+                                        Toaster.toast("Your data has been saved!");
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+
+                                                //stuff that updates ui
+                                                initialize();
+
+                                            }
+                                        });
 
                                     }
-                                });
+                                }
 
+                            } catch (Exception e) {
+                                Log.d("Exception", "" + e);
+                                Toaster.toast("Fail to save! Cannot get geo info of this address!");
                             }
-
-                        } catch (Exception e) {
-                            Log.d("Exception", "" + e);
-                            Toaster.toast("Fail to save! Cannot get geo info of this address!");
                         }
-                    }
-                }).start();
+                    }).start();*/
+
+                }
             }
         });
 
@@ -299,13 +348,13 @@ public class Tab1NewEntry extends Fragment implements ReceiverInterface {
 
         property_price.setText("0");
         down_payment.setText("0");
-        annual_percentage_rate.setText("0");
+        //annual_percentage_rate.setText("0");
         monthy_payment.setText("0");
         terms_radio_group.check(R.id.radio_15);
         terms = 15;
         propertyPrice = 0;
         downPayment = 0;
-        apr = 0;
+        //apr = 0;
         monthyPayment = 0;
         index = -1;
     }

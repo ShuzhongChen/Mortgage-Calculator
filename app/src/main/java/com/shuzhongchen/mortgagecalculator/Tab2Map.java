@@ -44,6 +44,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,7 +145,7 @@ public class Tab2Map extends Fragment {
                         TextView apr = dialogDetails.findViewById(R.id.apr);
                         apr.setText(Double.toString(geoInfo.apr));
                         TextView monthly = dialogDetails.findViewById(R.id.monthly_payment);
-                        monthly.setText(Double.toString(geoInfo.monthyPayment));
+                        monthly.setText(new DecimalFormat("##0.00").format(geoInfo.monthyPayment));
 
                         Button edit = dialogDetails.findViewById(R.id.btn_edit);
                         final ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.container);
@@ -164,6 +165,7 @@ public class Tab2Map extends Fragment {
                             public void onClick(View v) {
                                 savedBasicInfo.remove(geoInfo);
                                 ModelUtils.save(getContext(), MODEL_BASICINFO, savedBasicInfo);
+                                markers.get(i).remove();
                                 dialogDetails.onBackPressed();
                                 initialization();
                             }
